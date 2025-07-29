@@ -6,3 +6,5 @@ seaborn
 imblearn
 shap
 lightgbm
+imbalanced-learn
+jupyter
