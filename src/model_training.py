@@ -26,9 +26,12 @@ def train_logistic_regression(X_train: pd.DataFrame, y_train: pd.Series) -> Logi
     return model
 
 def train_lightgbm(X_train: pd.DataFrame, y_train: pd.Series) -> lgb.LGBMClassifier:
-    """Train LightGBM model."""
-    model = lgb.LGBMClassifier(random_state=42, n_estimators=1000, learning_rate=0.05, num_leaves=31,
-                               objective='binary', metric='aucpr', is_unbalance=True)
+    n_neg = (y_train == 0).sum()
+    n_pos = (y_train == 1).sum()
+    scale_pos_weight = n_neg / n_pos
+    model = lgb.LGBMClassifier(random_state=42, n_estimators=1000, learning_rate=0.05, 
+                               num_leaves=31, objective='binary', metric='aucpr',
+                               scale_pos_weight=scale_pos_weight)
     model.fit(X_train, y_train)
     logger.info("Trained LightGBM model")
     return model
